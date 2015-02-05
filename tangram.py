@@ -6,11 +6,9 @@
 #
 # This class represents a tangram piece
 
-from astar_search import *
-
 class Tangram(object):
     def __init__(self, piece):
-        self.counter = 0
+        self.available = True
         self.pieceOrigin = piece    # The original array that represents the piece
         self.orientations = []      # All of the possible orientations of the starting piece
         self.dimX = len(piece)      # Length
@@ -48,3 +46,7 @@ class Tangram(object):
             for cell in row:
                 if cell != 0:
                     print '*'
+
+    # Sets if the piece has been used or not
+    def setAvailable(self, available):
+        self.available = available
