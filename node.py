@@ -5,7 +5,7 @@
 #         École Polytechnique de Montréal
 # Date:   January 12, 2015
 #
-# This class represents a node in a tree search
+# This class represents a node in a tree
 
 import sys
 import math
