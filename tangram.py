@@ -22,8 +22,10 @@ class Tangram(object):
     def possibleOrientation(self):
         # If the array is full and is a square, just add the original piece
         if self.dimX == self.dimY and self.isFull():
+            self.orientations.append(self.pieceOrigin)
             return
         else:
+            self.orientations.append(self.pieceOrigin)
             rotation90 = zip(*self.pieceOrigin[::-1])
             rotation180 = zip(*rotation90[::-1])
             rotation270 = zip(*rotation180[::-1])
