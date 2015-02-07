@@ -84,14 +84,14 @@ class TangramSolver(object):
             #if the top left corner fits, check the other coordinates of the piece
             for i in range(len(piece)):
                 for j in range(len(piece[i])):
-                    if piece[j][i] != self.puzzle[y+j][x+i]:
+                    if piece[i][j] == '*' and piece[i][j] != self.puzzle[y+j][x+i]:
                         return False
             return True
         return False
 
 
 # Tests
-a = TangramSolver([['*','*'],['*','*']],[[['*',''],['*','*']],[['*']]])
+a = TangramSolver([['*','*'],['*','*']],[['*',' '],['*','*']])
 print len(a.availablePieces)
 
 b = a.possibleActions()
