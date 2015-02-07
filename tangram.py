@@ -8,11 +8,12 @@
 
 class Tangram(object):
     def __init__(self, piece):
+        self.dimX = len(piece[0])   # Length
+        self.dimY = len(piece)      # Height
         self.available = True       # A boolean to check if the piece has been used
         self.pieceOrigin = piece    # The original array that represents the piece
         self.orientations = []      # All of the possible orientations of the starting piece
-        self.dimX = len(piece[0])   # Length
-        self.dimY = len(piece)      # Height
+        self.possibleOrientation()
 
     # Check if the array is filled with '*'. If so, it returns true.
     def isFull(self):
@@ -42,10 +43,13 @@ class Tangram(object):
                 return
 
     def show(self):
-        for row in self.grid:
+        for row in self.pieceOrigin:
             for cell in row:
-                if cell != 0:
-                    print '*'
+                if cell == '*':
+                    print '*',
+                else:
+                    print ' ',
+            print
 
     def getAvailable(self):
         return self.available
@@ -53,3 +57,6 @@ class Tangram(object):
     # Sets if the piece has been used or not
     def setAvailable(self, available):
         self.available = available
+
+    def getOrientations(self):
+        return self.orientations
