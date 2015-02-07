@@ -11,8 +11,8 @@ class Tangram(object):
         self.available = True       # A boolean to check if the piece has been used
         self.pieceOrigin = piece    # The original array that represents the piece
         self.orientations = []      # All of the possible orientations of the starting piece
-        self.dimX = len(piece)      # Length
-        self.dimY = len(piece[0])   # Height
+        self.dimX = len(piece[0])   # Length
+        self.dimY = len(piece)      # Height
 
     # Check if the array is filled with '*'. If so, it returns true.
     def isFull(self):
@@ -22,10 +22,8 @@ class Tangram(object):
     def possibleOrientation(self):
         # If the array is full and is a square, just add the original piece
         if self.dimX == self.dimY and self.isFull():
-            self.orientations.append(self.pieceOrigin)
             return
         else:
-            self.orientations.append(self.pieceOrigin)
             rotation90 = zip(*self.pieceOrigin[::-1])
             rotation180 = zip(*rotation90[::-1])
             rotation270 = zip(*rotation180[::-1])

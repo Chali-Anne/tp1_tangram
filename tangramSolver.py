@@ -14,8 +14,9 @@ from state import *
 class TangramSolver(object):
     def __init__(self, grid, pieces):
         self.puzzle = grid              # The tangram puzzle
-        self.puzzleWidth = len(grid)    # The x
-        self.puzzleHeight = len(grid[0])    # The y
+        self.puzzleWidth = len(grid[0])    # The X
+        self.puzzleHeight = len(grid)    # The Y
+
 
         self.availablePieces = []
         for x in pieces:
@@ -54,7 +55,7 @@ class TangramSolver(object):
     # Defines the possible actions depending on the situation
     def possibleActions(self):
         actions = []
-        # We go through each empty space of the puzle
+        # We go through each empty space of the puzzle
         for i in range(self.puzzleWidth):
             for j in range(self.puzzleHeight):
                 # If the spot is empty
@@ -72,5 +73,13 @@ class TangramSolver(object):
 
     # Determines if a given piece fits in a given area of the puzzle
     def pieceFits(self, (piece, x, y)):
-
+        #Check if the top left corner of the piece fits in x,y
+        if piece[0][0] == self.puzzle[y][x]:
+            #if the top left corner fits, check the other coordinates of the piece
+            for i in range(piece.dimY):
+                for j in range(piece.dimX):
+                    if piece[i][j] != self.puzzle[y+i][x+j]:
+                        return False
+            return True
         return False
+
