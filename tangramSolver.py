@@ -13,12 +13,15 @@ from state import *
 
 class TangramSolver(object):
     def __init__(self, grid, pieces):
-        self.puzzle = grid      # The tangram puzzle
+        self.puzzle = grid              # The tangram puzzle
+        self.puzzleWidth = len(grid)    # The x
+        self.puzzleHeight = len(grid[0])    # The y
+
         self.availablePieces = []
         for x in pieces:
             self.availablePieces.append(Tangram(x))
-        self.counter = 0        # The number of choices
-        self.emptyCells = 0     # The number of cells to fill
+        self.counter = 0                # The number of choices
+        self.emptyCells = 0             # The number of cells to fill
 
     # To check if two states are the same, we compare the puzzles' completion
     def equals(self, state):
@@ -51,3 +54,21 @@ class TangramSolver(object):
     # Defines the possible actions depending on the situation
     def possibleActions(self):
         actions = []
+        # We go through each empty space of the puzle
+        for i in range(self.puzzleWidth):
+            for j in range(self.puzzleHeight):
+                # If the spot is empty
+                if self.puzzle[i][j] == ' ':
+                    # For each piece available
+                    for currentPiece in self.availablePieces:
+                        # For each orientation of the piece
+                        for orientation in range(len(currentPiece)):
+                            # Check if the piece fits
+                            if self.pieceFits(currentPiece[orientation]):
+                                currentPiece.setAvailable(False)    # Need to check if it does what it says
+                                actions.append((currentPiece[orientation], i, j))
+        return actions
+
+    # Determines if a given piece fits in a given area of the puzzle
+    def pieceFits(self, piece):
+        return False

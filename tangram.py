@@ -8,7 +8,7 @@
 
 class Tangram(object):
     def __init__(self, piece):
-        self.available = True
+        self.available = True       # A boolean to check if the piece has been used
         self.pieceOrigin = piece    # The original array that represents the piece
         self.orientations = []      # All of the possible orientations of the starting piece
         self.dimX = len(piece)      # Length
