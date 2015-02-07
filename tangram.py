@@ -47,6 +47,9 @@ class Tangram(object):
                 if cell != 0:
                     print '*'
 
+    def getAvailable(self):
+        return self.available
+
     # Sets if the piece has been used or not
     def setAvailable(self, available):
         self.available = available

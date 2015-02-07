@@ -61,14 +61,16 @@ class TangramSolver(object):
                 if self.puzzle[i][j] == ' ':
                     # For each piece available
                     for currentPiece in self.availablePieces:
-                        # For each orientation of the piece
-                        for orientation in range(len(currentPiece)):
-                            # Check if the piece fits
-                            if self.pieceFits(currentPiece[orientation]):
-                                currentPiece.setAvailable(False)    # Need to check if it does what it says
-                                actions.append((currentPiece[orientation], i, j))
+                        if currentPiece.getAvailable():
+                            # For each orientation of the piece
+                            for orientation in range(len(currentPiece)):
+                                # Check if the piece fits
+                                if self.pieceFits(currentPiece[orientation], i, j):
+                                    currentPiece.setAvailable(False)    # Need to check if it does what it says
+                                    actions.append((currentPiece[orientation], i, j))
         return actions
 
     # Determines if a given piece fits in a given area of the puzzle
-    def pieceFits(self, piece):
+    def pieceFits(self, (piece, x, y)):
+
         return False
