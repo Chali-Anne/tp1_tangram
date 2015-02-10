@@ -41,28 +41,14 @@ class TangramSolver(object):
                     print '{:2}'.format(cell),       # Eventually print the piece's number
             print
 
-    # Defines the cost of the state
-    def cost(self, action):
-        return 1
-
-    def heuristic(self):
-        return 0
-
-    # Defines the goal conditions
-    def isGoal(self):
-        # If there are no more available pieces and there are no more empty spaces.
-        if self.emptyCells == 0:
-            return True
-        return False
-
     # Defines the effects of the actions
-    def executeAction(self, (piece,row,column, index)):
+    def executeAction(self,(piece,row,column, index)):
         self.counter += 1
 
         # For each space of the piece
         for j, x in zip(range(row,row + len(piece)), range(len(piece))):
             for i, y in zip(range(column,column + len(piece[0])), range(len(piece[0]))):
-                if piece[x][y] != ' ':
+                if piece[x][y] == '*':
                     self.puzzle[j][i] = index
                     self.emptyCells -= 1
 
@@ -72,17 +58,30 @@ class TangramSolver(object):
         # We go through each empty space of the puzzle
         for i in range(self.puzzleHeight):
             for j in range(self.puzzleWidth):
+                if self.puzzle[i][j] == '*':
                 # For each piece available
-                for currentPiece in self.availablePieces:
-                    if currentPiece[0].getAvailable():
-                        # For each orientation of the piece
-                        for orientation in range(len(currentPiece[0].getOrientations())):
-                            # Check if the piece fits
-                            if self.pieceFits((currentPiece[0].getOrientations()[orientation], i, j)):
-                                currentPiece[0].setAvailable(False)    # Need to check if it does what it says
-                                actions.append((currentPiece[0].getOrientations()[orientation], i, j, currentPiece[1]))
+                    for currentPiece in self.availablePieces:
+                        if currentPiece[0].getAvailable():
+                            # For each orientation of the piece
+                            for orientation in range(len(currentPiece[0].getOrientations())):
+                                # Check if the piece fits
+                                if self.pieceFits((currentPiece[0].getOrientations()[orientation], i, j)):
+                                    currentPiece[0].setAvailable(False)    # Need to check if it does what it says
+                                    actions.append((currentPiece[0].getOrientations()[orientation], i, j, currentPiece[1]))
 
         return actions
+
+    # Defines the goal conditions
+    def isGoal(self):
+        # If there are no more available pieces and there are no more empty spaces.
+        return self.emptyCells == 0
+
+    # Defines the cost of the state
+    def cost(self, action):
+        return 1
+
+    def heuristic(self):
+        return 0
 
     # Determines if a given piece fits in a given area of the puzzle
     def pieceFits(self, (piece, x, y)):
@@ -91,7 +90,7 @@ class TangramSolver(object):
             #if the top left corner fits, check the other coordinates of the piece
             for i in range(len(piece)):
                 for j in range(len(piece[i])):
-                    if piece[i][j] == '*' and piece[i][j] != self.puzzle[y+j][x+i]:
+                    if piece[i][j] == '*' and self.puzzle[y+i][x+j] != '*':
                         return False
             return True
         return False
