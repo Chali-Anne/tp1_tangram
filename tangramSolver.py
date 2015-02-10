@@ -23,6 +23,18 @@ class TangramSolver(object):
             self.availablePieces.append(Tangram(x))
         self.counter = 0                # The number of choices
         self.emptyCells = 0             # The number of cells to fill
+        for i in range(self.puzzleHeight):
+            self.emptyCells += self.puzzle[i].count('*')
+
+
+    def show(self):
+        for row in self.pieceOrigin:
+            for cell in row:
+                if cell == '*':
+                    print '*',
+                else:
+                    print ' ',
+            print
 
     # To check if two states are the same, we compare the puzzles' completion
     def equals(self, state):
@@ -33,18 +45,22 @@ class TangramSolver(object):
         for row in self.puzzle:
             for cell in row:
                 if cell == -1:
-                    print ' '       # Empty spaces remain empty
+                    print ' ',       # Empty spaces remain empty
                 else:
-                    print 'Y'       # Eventually print the piece's number
+                    print '{:2}'.format(cell),       # Eventually print the piece's number
+            print
 
     # Defines the cost of the state
     def cost(self, action):
         return 1
 
+    def heuristic(self):
+        return 0
+
     # Defines the goal conditions
-    def goal(self):
+    def isGoal(self):
         # If there are no more available pieces and there are no more empty spaces.
-        if not self.availablePieces and self.emptyCells == 0:
+        if self.emptyCells == 0:
             return True
         return False
 
@@ -56,6 +72,7 @@ class TangramSolver(object):
         for j in range(row,row + len(piece)):
             for i in range(column,column + len(piece[0])):
                 self.puzzle[j][i] = index
+                self.emptyCells -= 1
 
     # Defines the possible actions depending on the situation
     def possibleActions(self):
@@ -76,7 +93,6 @@ class TangramSolver(object):
                                     actions.append((currentPiece.getOrientations()[orientation], i, j, index))
         return actions
 
-    # PROBLEM HERE WITH INDEXES OUT OF RANGE
     # Determines if a given piece fits in a given area of the puzzle
     def pieceFits(self, (piece, x, y)):
         #Check if the top left corner of the piece fits in x,y
@@ -91,8 +107,6 @@ class TangramSolver(object):
 
 
 # Tests
-a = TangramSolver([['*','*'],['*','*']],[['*',' '],['*','*']])
+a = TangramSolver([['*','*'],['*','*']],[[['*',' '],['*','*']], [['*']]])
 print len(a.availablePieces)
-
-b = a.possibleActions()
-print len(b)
+solution = astar_search(a)
