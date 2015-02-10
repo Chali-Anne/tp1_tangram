@@ -16,25 +16,16 @@ class TangramSolver(object):
         self.puzzle = grid               # The tangram puzzle
         self.puzzleWidth = len(grid[0])  # The X
         self.puzzleHeight = len(grid)    # The Y
-
-
         self.availablePieces = []
+        count = 0
         for x in pieces:
-            self.availablePieces.append(Tangram(x))
+            pieceId = [Tangram(x), count]
+            self.availablePieces.append(pieceId)
+            count += 1
         self.counter = 0                # The number of choices
         self.emptyCells = 0             # The number of cells to fill
         for i in range(self.puzzleHeight):
             self.emptyCells += self.puzzle[i].count('*')
-
-
-    def show(self):
-        for row in self.pieceOrigin:
-            for cell in row:
-                if cell == '*':
-                    print '*',
-                else:
-                    print ' ',
-            print
 
     # To check if two states are the same, we compare the puzzles' completion
     def equals(self, state):
@@ -69,10 +60,11 @@ class TangramSolver(object):
         self.counter += 1
 
         # For each space of the piece
-        for j in range(row,row + len(piece)):
-            for i in range(column,column + len(piece[0])):
-                self.puzzle[j][i] = index
-                self.emptyCells -= 1
+        for j, x in zip(range(row,row + len(piece)), range(len(piece))):
+            for i, y in zip(range(column,column + len(piece[0])), range(len(piece[0]))):
+                if piece[x][y] != ' ':
+                    self.puzzle[j][i] = index
+                    self.emptyCells -= 1
 
     # Defines the possible actions depending on the situation
     def possibleActions(self):
@@ -80,23 +72,22 @@ class TangramSolver(object):
         # We go through each empty space of the puzzle
         for i in range(self.puzzleHeight):
             for j in range(self.puzzleWidth):
-                # If the spot is empty
-                #if self.puzzle[i][j] != ' ':
-                    # For each piece available
-                    for index, currentPiece in enumerate(self.availablePieces):
-                        if currentPiece.getAvailable():
-                            # For each orientation of the piece
-                            for orientation in range(len(currentPiece.getOrientations())):
-                                # Check if the piece fits
-                                if self.pieceFits((currentPiece.getOrientations()[orientation], i, j)):
-                                    currentPiece.setAvailable(False)    # Need to check if it does what it says
-                                    actions.append((currentPiece.getOrientations()[orientation], i, j, index))
+                # For each piece available
+                for currentPiece in self.availablePieces:
+                    if currentPiece[0].getAvailable():
+                        # For each orientation of the piece
+                        for orientation in range(len(currentPiece[0].getOrientations())):
+                            # Check if the piece fits
+                            if self.pieceFits((currentPiece[0].getOrientations()[orientation], i, j)):
+                                currentPiece[0].setAvailable(False)    # Need to check if it does what it says
+                                actions.append((currentPiece[0].getOrientations()[orientation], i, j, currentPiece[1]))
+
         return actions
 
     # Determines if a given piece fits in a given area of the puzzle
     def pieceFits(self, (piece, x, y)):
         #Check if the top left corner of the piece fits in x,y
-        if piece[0][0] == self.puzzle[y][x]:
+        if piece[0][0] == self.puzzle[y][x] or piece[0][0] == ' ':
             #if the top left corner fits, check the other coordinates of the piece
             for i in range(len(piece)):
                 for j in range(len(piece[i])):
@@ -108,5 +99,4 @@ class TangramSolver(object):
 
 # Tests
 a = TangramSolver([['*','*'],['*','*']],[[['*',' '],['*','*']], [['*']]])
-print len(a.availablePieces)
 solution = astar_search(a)
