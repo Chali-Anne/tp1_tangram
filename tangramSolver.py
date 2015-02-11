@@ -57,7 +57,6 @@ class TangramSolver(object):
                             self.puzzle[puzzleRow][puzzleCell] = id
                             self.emptyCells -= 1
                 self.availablePieces.remove(piece)
-        # self.availablePieces.remove(self.availablePieces[id])
 
     # Defines the possible actions depending on the situation
     def possibleActions(self):
@@ -73,7 +72,7 @@ class TangramSolver(object):
                         for orientation in range(len(currentPiece[0].getOrientations())):
                             # Check if the piece fits
                             if self.pieceFits((currentPiece[0].getOrientations()[orientation], row, cell)):
-                                actions.append((row, cell,orientation, currentPiece[1]))
+                                actions.append((row, cell, orientation, currentPiece[1]))
                                 copyAvailablePieces.remove(currentPiece)
                                 break
 
@@ -94,8 +93,7 @@ class TangramSolver(object):
     # Determines if a given piece fits in a given area of the puzzle
     def pieceFits(self, (piece, puzzleRow, puzzleCell)):
         #Check if the top left corner of the piece fits in x,y
-        if piece[0][0] == self.puzzle[puzzleRow][puzzleCell] or piece[0][0] == ' ':
-            #if the top left corner fits, check the other coordinates of the piece
+        if self.puzzle[puzzleRow][puzzleCell] == '*' and self.puzzle[puzzleRow].count('*') >= piece[0].count('*'):
             for i in range(len(piece)):
                 for j in range(len(piece[0])):
                     # Check if out of range
@@ -160,7 +158,7 @@ pattern = [
 ]
 
 a = TangramSolver(pattern,pieces)
-# astar_search(a)
+#astar_search(a)
 b = TangramSolver([['*','*'],['*','*']],
                   [     [['*',' '],['*','*']],
                         [['*']]

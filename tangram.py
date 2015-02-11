@@ -31,22 +31,7 @@ class Tangram(object):
                 temp = zip(*temp[::-1])
                 if not self.orientations.__contains__(temp):
                     self.orientations.append(temp)
-            # rotation90 = zip(*self.pieceOrigin[::-1])
-            # rotation180 = zip(*rotation90[::-1])
-            # rotation270 = zip(*rotation180[::-1])
-            # # If the first rotation gives the same thing as the original, there is only one possibility
-            # if rotation90 == self.pieceOrigin:
-            #     return
-            # # If the first rotation is not the same as the original or the third, all possibilities are unique
-            # elif rotation90 != self.pieceOrigin and rotation90 != rotation270:
-            #     self.orientations.append(rotation90)
-            #     self.orientations.append(rotation180)
-            #     self.orientations.append(rotation270)
-            # # If the second rotation is the same as the original, there are only two possibilities
-            # elif self.pieceOrigin == rotation180:
-            #     self.orientations.append(rotation90)
-            else:
-                return
+            return
 
     def show(self):
         for row in self.pieceOrigin:
