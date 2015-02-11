@@ -42,7 +42,7 @@ class TangramSolver(object):
             print
 
     # Defines the effects of the actions
-    def executeAction(self,(piece,row,column, id)):
+    def executeAction(self,(piece,row,column,id)):
         self.counter += 1
 
         # For each space of the piece
@@ -88,12 +88,16 @@ class TangramSolver(object):
 
     # Determines if a given piece fits in a given area of the puzzle
     def pieceFits(self, (piece, x, y)):
+        row = len(piece)
+        column = len(piece[0])
         #Check if the top left corner of the piece fits in x,y
         if piece[0][0] == self.puzzle[y][x] or piece[0][0] == ' ':
             #if the top left corner fits, check the other coordinates of the piece
-            for i in range(len(piece)):
-                for j in range(len(piece[i])):
-                    if piece[i][j] == '*' and self.puzzle[y+i][x+j] != '*':
+            for i in range(row):
+                for j in range(column):
+                    puzzleRow = y+i
+                    puzzleColumn = x+j
+                    if piece[i][j] == '*' and self.puzzle[puzzleRow][puzzleColumn] != '*':
                         return False
             return True
         return False
@@ -137,8 +141,8 @@ pieces = [piece0, piece1, piece2, piece3, piece4,
  piece20, piece21, piece22, piece23, piece24,
  piece25, piece26, piece27]
 
-# x : 17
-# y : 9
+# columns : 17
+# rows : 9
 pattern = [
  [' ',' ','*','*',' ',' ','*','*',' ',' ',' ','*','*','*','*','*','*'],
  [' ',' ','*','*',' ',' ','*','*',' ',' ',' ','*','*','*','*','*','*'],
@@ -152,4 +156,19 @@ pattern = [
 ]
 
 a = TangramSolver(pattern,pieces)
-solution = astar_search(a)
+b = TangramSolver([['*','*'],['*','*'],['*','*']],
+                  [     [['*',' '],['*','*']],
+                        [['*','*']],
+                        [['*']]
+                  ])
+c = TangramSolver([['*','*'],['*','*'],['*','*']],
+                  [     [['*']],
+                        [['*','*']],
+                        [['*','*']],
+                        [['*']]
+                  ])
+d = TangramSolver([['*','*'],['*','*'],['*','*']],
+                  [     [['*',' '],['*','*']],
+                        [['*',' '],['*','*']],
+                    ])
+solution = astar_search(c)
