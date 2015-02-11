@@ -14,8 +14,8 @@ from state import *
 class TangramSolver(object):
     def __init__(self, grid, pieces):
         self.puzzle = grid               # The tangram puzzle
-        self.puzzleWidth = len(grid[0])  # The X
-        self.puzzleHeight = len(grid)    # The Y
+        self.puzzleWidth = len(grid[0])  # The columns
+        self.puzzleHeight = len(grid)    # The rows
         self.availablePieces = []
         count = 0
         for x in pieces:
@@ -42,33 +42,37 @@ class TangramSolver(object):
             print
 
     # Defines the effects of the actions
-    def executeAction(self,(piece,row,column,id)):
+    def executeAction(self,(row,cell,orientation, id)):
         self.counter += 1
-
         # For each space of the piece
-        for j, x in zip(range(row,row + len(piece)), range(len(piece))):
-            for i, y in zip(range(column,column + len(piece[0])), range(len(piece[0]))):
-                if piece[x][y] == '*':
-                    self.puzzle[j][i] = id
-                    self.emptyCells -= 1
-
-        self.availablePieces.remove(self.availablePieces[id])
+        for piece in self.availablePieces:
+            if id == piece[1]:
+                config = piece[0].getOrientations()[orientation]
+                for pieceRow in range(len(config)):
+                    for pieceCell in range(len(config[0])):
+                        if config[pieceRow][pieceCell] == '*':
+                            puzzleRow = pieceRow + row
+                            puzzleCell = pieceCell + cell
+                            self.puzzle[puzzleRow][puzzleCell] = id
+                            self.emptyCells -= 1
+                self.availablePieces.remove(piece)
+        # self.availablePieces.remove(self.availablePieces[id])
 
     # Defines the possible actions depending on the situation
     def possibleActions(self):
         actions = []
         copyAvailablePieces = list(self.availablePieces)
         # We go through each space of the puzzle
-        for i in range(self.puzzleHeight):
-            for j in range(self.puzzleWidth):
-                if self.puzzle[i][j] == '*':
+        for row in range(self.puzzleHeight):
+            for cell in range(self.puzzleWidth):
+                if self.puzzle[row][cell] == '*':
                 # For each piece available
                     for currentPiece in copyAvailablePieces:
                         # For each orientation of the piece
                         for orientation in range(len(currentPiece[0].getOrientations())):
                             # Check if the piece fits
-                            if self.pieceFits((currentPiece[0].getOrientations()[orientation], i, j)):
-                                actions.append((currentPiece[0].getOrientations()[orientation], i, j, currentPiece[1]))
+                            if self.pieceFits((currentPiece[0].getOrientations()[orientation], row, cell)):
+                                actions.append((row, cell,orientation, currentPiece[1]))
                                 copyAvailablePieces.remove(currentPiece)
                                 break
 
@@ -87,17 +91,13 @@ class TangramSolver(object):
         return 0
 
     # Determines if a given piece fits in a given area of the puzzle
-    def pieceFits(self, (piece, x, y)):
-        row = len(piece)
-        column = len(piece[0])
+    def pieceFits(self, (piece, puzzleRow, puzzleCell)):
         #Check if the top left corner of the piece fits in x,y
-        if piece[0][0] == self.puzzle[y][x] or piece[0][0] == ' ':
+        if piece[0][0] == self.puzzle[puzzleRow][puzzleCell] or piece[0][0] == ' ':
             #if the top left corner fits, check the other coordinates of the piece
-            for i in range(row):
-                for j in range(column):
-                    puzzleRow = y+i
-                    puzzleColumn = x+j
-                    if piece[i][j] == '*' and self.puzzle[puzzleRow][puzzleColumn] != '*':
+            for i in range(len(piece)):
+                for j in range(len(piece[0])):
+                    if piece[i][j] == '*' and self.puzzle[puzzleRow+i][puzzleCell+j] != '*':
                         return False
             return True
         return False
@@ -156,33 +156,43 @@ pattern = [
 ]
 
 a = TangramSolver(pattern,pieces)
-b = TangramSolver([['*','*'],['*','*'],['*','*']],
+b = TangramSolver([['*','*'],['*','*']],
                   [     [['*',' '],['*','*']],
-                        [['*','*']],
                         [['*']]
                   ])
+print "Test tangram b"
+astar_search(b)
 c = TangramSolver([['*','*'],['*','*'],['*','*']],
-                  [     [['*']],
-                        [['*','*']],
-                        [['*','*']],
+                  [     [['*'],['*']],
+                        [['*'],['*']],
+                        [['*']],
                         [['*']]
                   ])
+print "Test tangram c"
+astar_search(c)
 d = TangramSolver([['*','*'],['*','*'],['*','*']],
                   [     [['*',' '],['*','*']],
                         [['*',' '],['*','*']],
                     ])
+print "Test tangram d"
+astar_search(d)
 e = TangramSolver([['*','*'],['*','*'],['*','*']],
                   [     [['*',' '],['*','*'],['*','*']],
                         [['*']],
                     ])
+print "Test tangram e"
+astar_search(e)
 f = TangramSolver([['*','*'],['*','*'],['*','*']],
                   [     [['*','*'],['*','*']],
                         [['*','*']],
 
                 ])
+print "Test tangram f"
+astar_search(f)
 g = TangramSolver([['*','*'],['*','*'],['*','*']],
                   [     [['*','*'],['*','*']],
                         [['*','*']],
 
                 ])
-solution = astar_search(d)
+print "Test tangram g"
+astar_search(g)
