@@ -23,13 +23,14 @@ class TangramSolver(object):
             self.availablePieces.append(pieceId)
             count += 1
         self.counter = 0                # The number of choices
+        self.nbTotalPieces = len(pieces)        #The number of total pieces
         self.emptyCells = 0             # The number of cells to fill
         for i in range(self.puzzleHeight):
             self.emptyCells += self.puzzle[i].count('*')
 
     # To check if two states are the same, we compare the puzzles' completion
     def equals(self, state):
-        return self.puzzle == state.puzzle
+        return self.emptyCells == state.emptyCells
 
     # Equivalent to printing, but specific to a state
     def show(self):
@@ -85,10 +86,10 @@ class TangramSolver(object):
 
     # Defines the cost of the state
     def cost(self, action):
-        return 1
+        return self.emptyCells
 
     def heuristic(self):
-        return 0
+        return self.nbTotalPieces - self.counter
 
     # Determines if a given piece fits in a given area of the puzzle
     def pieceFits(self, (piece, puzzleRow, puzzleCell)):
@@ -97,7 +98,10 @@ class TangramSolver(object):
             #if the top left corner fits, check the other coordinates of the piece
             for i in range(len(piece)):
                 for j in range(len(piece[0])):
-                    if piece[i][j] == '*' and self.puzzle[puzzleRow+i][puzzleCell+j] != '*':
+                    # Check if out of range
+                    if puzzleRow + i >= self.puzzleHeight or puzzleCell + j >= self.puzzleWidth:
+                        return False
+                    elif piece[i][j] == '*' and self.puzzle[puzzleRow+i][puzzleCell+j] != '*':
                         return False
             return True
         return False
@@ -156,6 +160,7 @@ pattern = [
 ]
 
 a = TangramSolver(pattern,pieces)
+# astar_search(a)
 b = TangramSolver([['*','*'],['*','*']],
                   [     [['*',' '],['*','*']],
                         [['*']]
@@ -190,9 +195,37 @@ f = TangramSolver([['*','*'],['*','*'],['*','*']],
 print "Test tangram f"
 astar_search(f)
 g = TangramSolver([['*','*'],['*','*'],['*','*']],
-                  [     [['*','*'],['*','*']],
+                  [     [['*','*']],
+                        [['*','*']],
                         [['*','*']],
 
                 ])
 print "Test tangram g"
 astar_search(g)
+
+pattern1 = [ [' ',' ',' ',' ','*','*',' ',' ',' ',' '],
+[' ',' ',' ',' ','*','*',' ',' ',' ',' '],
+[' ',' ','*','*','*','*','*','*',' ',' '],
+[' ',' ',' ','*','*','*','*',' ',' ',' '],
+[' ',' ',' ',' ','*','*',' ',' ',' ',' '],
+[' ',' ',' ',' ','*','*',' ',' ',' ',' '],
+[' ',' ',' ',' ','*','*',' ',' ',' ',' '],
+[' ',' ',' ','*','*','*','*',' ',' ',' '],
+[' ','*','*','*','*','*','*','*','*',' ']]
+piece0 = [['*',' ',' '],['*','*',' '],['*','*','*']]
+piece1 = [['*',' ',' '],['*','*',' '],['*','*','*']]
+piece2 = [['*','*'],['*','*']]
+piece3 = [['*','*'],['*','*']]
+piece4 = [['*','*']]
+piece5 = [['*','*']]
+piece6 = [['*',' '],['*','*']]
+piece7 = [['*',' '],['*','*']]
+piece8 = [['*']]
+piece9 = [['*']]
+pieces1 = [piece0, piece1, piece2, piece3, piece4,
+ piece5, piece6, piece7, piece8, piece9]
+test1 = TangramSolver(pattern1, pieces1)
+print "Test tangram exemple de cours"
+astar_search(test1)
+
+print "Fin des tests"
