@@ -11,7 +11,6 @@ def astar_search(initialState):
     frontier = [Node(initialState)]
     while frontier:
         node = frontier.pop(0)
-        step += 1
         # node.state.show()
         # print '----------------'
         if node.state.isGoal():
@@ -23,6 +22,7 @@ def astar_search(initialState):
             continue
         else:
             frontier = frontier + node.expand()
-            frontier.sort(cmp = lambda n1,n2: -1 if n1.f < n2.f else (1 if n1.f > n2.f else 0))
+            frontier.sort(cmp = lambda n1,n2: -1 if n1.f > n2.f else (1 if n1.f < n2.f else 0))
+            step += 1
     print "No solution was found"
     return None

@@ -42,32 +42,35 @@ class TangramSolver(object):
             print
 
     # Defines the effects of the actions
-    def executeAction(self,(piece,row,column, index)):
+    def executeAction(self,(piece,row,column, id)):
         self.counter += 1
 
         # For each space of the piece
         for j, x in zip(range(row,row + len(piece)), range(len(piece))):
             for i, y in zip(range(column,column + len(piece[0])), range(len(piece[0]))):
                 if piece[x][y] == '*':
-                    self.puzzle[j][i] = index
+                    self.puzzle[j][i] = id
                     self.emptyCells -= 1
+
+        self.availablePieces.remove(self.availablePieces[id])
 
     # Defines the possible actions depending on the situation
     def possibleActions(self):
         actions = []
-        # We go through each empty space of the puzzle
+        copyAvailablePieces = list(self.availablePieces)
+        # We go through each space of the puzzle
         for i in range(self.puzzleHeight):
             for j in range(self.puzzleWidth):
                 if self.puzzle[i][j] == '*':
                 # For each piece available
-                    for currentPiece in self.availablePieces:
-                        if currentPiece[0].getAvailable():
-                            # For each orientation of the piece
-                            for orientation in range(len(currentPiece[0].getOrientations())):
-                                # Check if the piece fits
-                                if self.pieceFits((currentPiece[0].getOrientations()[orientation], i, j)):
-                                    currentPiece[0].setAvailable(False)    # Need to check if it does what it says
-                                    actions.append((currentPiece[0].getOrientations()[orientation], i, j, currentPiece[1]))
+                    for currentPiece in copyAvailablePieces:
+                        # For each orientation of the piece
+                        for orientation in range(len(currentPiece[0].getOrientations())):
+                            # Check if the piece fits
+                            if self.pieceFits((currentPiece[0].getOrientations()[orientation], i, j)):
+                                actions.append((currentPiece[0].getOrientations()[orientation], i, j, currentPiece[1]))
+                                copyAvailablePieces.remove(currentPiece)
+                                break
 
         return actions
 
@@ -97,5 +100,56 @@ class TangramSolver(object):
 
 
 # Tests
-a = TangramSolver([['*','*'],['*','*']],[[['*',' '],['*','*']], [['*']]])
+
+
+piece0 = [['*', ' '],['*','*'],['*','*']]
+piece1 = [['*', ' '],['*','*'],['*',' ']]
+piece2 = [[' ', '*'],['*','*'],['*',' ']]
+piece3 = [[' ', '*'],['*','*'],['*',' ']]
+piece4 = [[' ', '*'],[' ','*'],['*','*']]
+piece5 = [[' ', '*'],[' ','*'],['*','*']]
+piece6 = [[' ', '*'],[' ','*'],['*','*']]
+piece7 = [[' ', '*'],[' ','*'],['*','*']]
+piece8 = [['*'],['*']]
+piece9 = [['*'],['*']]
+piece10 = [['*'],['*']]
+piece11 = [['*'],['*']]
+piece12 = [['*', ' '],['*',' '],['*','*']]
+piece13 = [['*', ' '],['*',' '],['*','*']]
+piece14 = [['*', ' '],['*',' '],['*','*']]
+piece15 = [['*', '*'],['*','*'],['*','*']]
+piece16 = [['*', '*'],['*','*'],['*','*']]
+piece17 = [['*', '*'],['*','*'],['*','*']]
+piece18 = [['*', '*'],['*','*'],['*','*']]
+piece19 = [['*', '*'],['*','*'],['*','*']]
+piece20 = [['*', '*'],['*','*'],['*','*']]
+piece21 = [['*']]
+piece22 = [['*']]
+piece23 = [['*']]
+piece24 = [['*']]
+piece25 = [['*']]
+piece26 = [['*']]
+piece27 = [['*']]
+pieces = [piece0, piece1, piece2, piece3, piece4,
+ piece5, piece6, piece7, piece8, piece9,
+ piece10, piece11, piece12, piece13, piece14,
+ piece15, piece16, piece17, piece18, piece19,
+ piece20, piece21, piece22, piece23, piece24,
+ piece25, piece26, piece27]
+
+# x : 17
+# y : 9
+pattern = [
+ [' ',' ','*','*',' ',' ','*','*',' ',' ',' ','*','*','*','*','*','*'],
+ [' ',' ','*','*',' ',' ','*','*',' ',' ',' ','*','*','*','*','*','*'],
+ [' ','*','*','*','*','*','*','*','*',' ',' ','*','*',' ',' ',' ',' '],
+ [' ','*','*','*','*','*','*','*','*',' ',' ','*','*',' ',' ',' ',' '],
+ ['*','*',' ',' ','*','*',' ',' ','*','*',' ','*','*',' ','*','*','*'],
+ ['*','*',' ',' ','*','*',' ',' ','*','*',' ','*','*',' ','*','*','*'],
+ ['*','*',' ',' ','*','*',' ',' ','*','*',' ','*','*',' ',' ','*','*'],
+ ['*','*',' ',' ','*','*',' ',' ','*','*',' ','*','*','*','*','*','*'],
+ ['*','*',' ',' ','*','*',' ',' ','*','*',' ','*','*','*','*','*','*']
+]
+
+a = TangramSolver(pattern,pieces)
 solution = astar_search(a)
