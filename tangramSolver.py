@@ -85,7 +85,7 @@ class TangramSolver(object):
 
     # Defines the cost of the state
     def cost(self, action):
-        return self.emptyCells
+        return 0
 
     def heuristic(self):
         return self.nbTotalPieces - self.counter

@@ -14,6 +14,12 @@ class Tangram(object):
         self.pieceOrigin = piece    # The original array that represents the piece
         self.orientations = []      # All of the possible orientations of the starting piece
         self.possibleOrientation()
+        self.nbCells = 0
+
+    # A way to sort tangram pieces by size
+    # def __cmp__(self, other):
+    #     if hasattr(other, 'nbCells'):
+    #         return self.__cmp__(other.nbCells)
 
     # Check if the array is filled with '*'. If so, it returns true.
     def isFull(self):
@@ -32,6 +38,12 @@ class Tangram(object):
                 if not self.orientations.__contains__(temp):
                     self.orientations.append(temp)
             return
+
+    def countCells(self):
+        for y in range(self.dimY):
+            for x in range(self.dimX):
+                if self.pieceOrigin[y][x] == '*':
+                    self.nbCells += 1
 
     def show(self):
         for row in self.pieceOrigin:
