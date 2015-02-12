@@ -31,8 +31,7 @@ class Tangram(object):
                 temp = zip(*temp[::-1])
                 if not self.orientations.__contains__(temp):
                     self.orientations.append(temp)
-            else:
-                return
+            return
 
     def show(self):
         for row in self.pieceOrigin:
