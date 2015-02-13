@@ -63,28 +63,23 @@ class TangramSolver(object):
     # Defines the possible actions depending on the situation
     def possibleActions(self):
         actions = []
-        copyAvailablePieces = list(self.availablePieces)
-        # copyAvailablePieces = sorted(self.availablePieces, key=lambda x:int(x[0].nbCells), reverse=True)
-        # For each piece available
-        for currentPiece in copyAvailablePieces:
-            # Returns a list with the action, if any. And the piece to remove, if any.
-            tmp = self.goThroughPuzzle(currentPiece)
-            if tmp is not None:
-                actions.append(tmp[0])
-                copyAvailablePieces.remove(tmp[1])
-
-        return actions
+        tmp = self.goThroughPuzzle(self.availablePieces[0], actions)
+        if tmp is not None:
+            return tmp
 
     # To break from the nested loops
-    def goThroughPuzzle(self, currentPiece):
+    def goThroughPuzzle(self, currentPiece, listOfActions):
+        actions = list(listOfActions)
         # We go through each space of the puzzle
-            for row in range(self.puzzleHeight):
-                for cell in range(self.puzzleWidth):
-                    if self.puzzle[row][cell] == '*':
-                        for orientation in range(len(currentPiece[0].getOrientations())):
-                            # Check if the piece fits
-                            if self.pieceFits((currentPiece[0].getOrientations()[orientation], row, cell)):
-                                return [[row, cell, orientation, currentPiece[1]], currentPiece]
+        for row in range(self.puzzleHeight):
+            for cell in range(self.puzzleWidth):
+                if self.puzzle[row][cell] == '*':
+                    for orientation in range(len(currentPiece[0].getOrientations())):
+                        # Check if the piece fits
+                        if self.pieceFits((currentPiece[0].getOrientations()[orientation], row, cell)):
+                            actions.append((row, cell, orientation, currentPiece[1]))
+                                # return [[row, cell, orientation, currentPiece[1]], currentPiece]
+        return actions
 
     # Defines the goal conditions
     def isGoal(self):
@@ -195,11 +190,11 @@ piece9 = [['*']]
 pieces1 = [piece0, piece1, piece2, piece3, piece4,
  piece5, piece6, piece7, piece8, piece9]
 test1 = TangramSolver(pattern1, pieces1)
-# print "Test tangram exemple de cours"
-#
-# start_time = timeit.default_timer()
-# astar_search(test1)
-# elapsed = timeit.default_timer() - start_time
-# print str(elapsed) + " seconds"
+print "Test tangram exemple de cours"
+
+start_time = timeit.default_timer()
+astar_search(test1)
+elapsed = timeit.default_timer() - start_time
+print str(elapsed) + " seconds"
 
 print "Fin des tests"

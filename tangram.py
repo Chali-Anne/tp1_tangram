@@ -10,7 +10,6 @@ class Tangram(object):
     def __init__(self, piece):
         self.dimX = len(piece[0])   # Length
         self.dimY = len(piece)      # Height
-        self.available = True       # A boolean to check if the piece has been used
         self.pieceOrigin = piece    # The original array that represents the piece
         self.orientations = []      # All of the possible orientations of the starting piece
         self.possibleOrientation()
@@ -57,26 +56,5 @@ class Tangram(object):
                     print ' ',
             print
 
-    def getAvailable(self):
-        return self.available
-
-    # Sets if the piece has been used or not
-    def setAvailable(self, available):
-        self.available = available
-
     def getOrientations(self):
         return self.orientations
-
-# piece1 = [['*',' ',' '],['*','*',' '],['*','*','*']]
-# piece2 = [['*','*'],['*','*']]
-# piece3 = [['*','*'],['*','*']]
-#
-# a= Tangram(piece1)
-# b = a.nbCells
-# print b
-# pieces = [Tangram(piece1),Tangram(piece2), Tangram(piece3)]
-# # print pieces
-# pieces.sort(key=lambda x:x.nbCells, reverse=True)
-# newList = sorted(pieces, key=lambda x:x.nbCells, reverse = True)
-# print newList
-# print a
