@@ -10,6 +10,7 @@ from astar_search import *
 from tangram import *
 from node import *
 from state import *
+import timeit
 
 class TangramSolver(object):
     def __init__(self, grid, pieces):
@@ -27,6 +28,7 @@ class TangramSolver(object):
         self.emptyCells = 0             # The number of cells to fill
         for i in range(self.puzzleHeight):
             self.emptyCells += self.puzzle[i].count('*')
+        self.availablePieces = sorted(self.availablePieces, key=lambda x:int(x[0].nbCells), reverse=True)
 
     # To check if two states are the same, we compare the puzzles' completion
     def equals(self, state):
@@ -62,21 +64,27 @@ class TangramSolver(object):
     def possibleActions(self):
         actions = []
         copyAvailablePieces = list(self.availablePieces)
+        # copyAvailablePieces = sorted(self.availablePieces, key=lambda x:int(x[0].nbCells), reverse=True)
+        # For each piece available
+        for currentPiece in copyAvailablePieces:
+            # Returns a list with the action, if any. And the piece to remove, if any.
+            tmp = self.goThroughPuzzle(currentPiece)
+            if tmp is not None:
+                actions.append(tmp[0])
+                copyAvailablePieces.remove(tmp[1])
+
+        return actions
+
+    # To break from the nested loops
+    def goThroughPuzzle(self, currentPiece):
         # We go through each space of the puzzle
-        for row in range(self.puzzleHeight):
-            for cell in range(self.puzzleWidth):
-                if self.puzzle[row][cell] == '*':
-                # For each piece available
-                    for currentPiece in copyAvailablePieces:
-                        # For each orientation of the piece
+            for row in range(self.puzzleHeight):
+                for cell in range(self.puzzleWidth):
+                    if self.puzzle[row][cell] == '*':
                         for orientation in range(len(currentPiece[0].getOrientations())):
                             # Check if the piece fits
                             if self.pieceFits((currentPiece[0].getOrientations()[orientation], row, cell)):
-                                actions.append((row, cell, orientation, currentPiece[1]))
-                                copyAvailablePieces.remove(currentPiece)
-                                break
-
-        return actions
+                                return [[row, cell, orientation, currentPiece[1]], currentPiece]
 
     # Defines the goal conditions
     def isGoal(self):
@@ -84,8 +92,10 @@ class TangramSolver(object):
         return self.emptyCells == 0
 
     # Defines the cost of the state
-    def cost(self, action):
-        return 0
+    def cost(self, (row,cell,orientation, id)):
+        for piece in self.availablePieces:
+            if id == piece[1]:
+                return -1 * piece[0].nbCells
 
     def heuristic(self):
         return self.nbTotalPieces - self.counter
@@ -106,8 +116,6 @@ class TangramSolver(object):
 
 
 # Tests
-
-
 piece0 = [['*', ' '],['*','*'],['*','*']]
 piece1 = [['*', ' '],['*','*'],['*',' ']]
 piece2 = [[' ', '*'],['*','*'],['*',' ']]
@@ -158,48 +166,12 @@ pattern = [
 ]
 
 a = TangramSolver(pattern,pieces)
-#astar_search(a)
-b = TangramSolver([['*','*'],['*','*']],
-                  [     [['*',' '],['*','*']],
-                        [['*']]
-                  ])
-print "Test tangram b"
-astar_search(b)
-c = TangramSolver([['*','*'],['*','*'],['*','*']],
-                  [     [['*'],['*']],
-                        [['*'],['*']],
-                        [['*']],
-                        [['*']]
-                  ])
-print "Test tangram c"
-astar_search(c)
-d = TangramSolver([['*','*'],['*','*'],['*','*']],
-                  [     [['*',' '],['*','*']],
-                        [['*',' '],['*','*']],
-                    ])
-print "Test tangram d"
-astar_search(d)
-e = TangramSolver([['*','*'],['*','*'],['*','*']],
-                  [     [['*',' '],['*','*'],['*','*']],
-                        [['*']],
-                    ])
-print "Test tangram e"
-astar_search(e)
-f = TangramSolver([['*','*'],['*','*'],['*','*']],
-                  [     [['*','*'],['*','*']],
-                        [['*','*']],
+print "Test tangram MG"
 
-                ])
-print "Test tangram f"
-astar_search(f)
-g = TangramSolver([['*','*'],['*','*'],['*','*']],
-                  [     [['*','*']],
-                        [['*','*']],
-                        [['*','*']],
-
-                ])
-print "Test tangram g"
-astar_search(g)
+start_time = timeit.default_timer()
+astar_search(a)
+elapsed = timeit.default_timer() - start_time
+print str(elapsed) + " seconds"
 
 pattern1 = [ [' ',' ',' ',' ','*','*',' ',' ',' ',' '],
 [' ',' ',' ',' ','*','*',' ',' ',' ',' '],
@@ -223,7 +195,11 @@ piece9 = [['*']]
 pieces1 = [piece0, piece1, piece2, piece3, piece4,
  piece5, piece6, piece7, piece8, piece9]
 test1 = TangramSolver(pattern1, pieces1)
-print "Test tangram exemple de cours"
-astar_search(test1)
+# print "Test tangram exemple de cours"
+#
+# start_time = timeit.default_timer()
+# astar_search(test1)
+# elapsed = timeit.default_timer() - start_time
+# print str(elapsed) + " seconds"
 
 print "Fin des tests"
