@@ -7,7 +7,7 @@
 #
 # This class will be used to solve a tangram puzzle using a A* tree search
 
-from astar_search import *
+from hillclimbing import *
 from tangram import *
 from node import *
 from state import *

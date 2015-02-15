@@ -12,6 +12,6 @@ from tangramPuzzle import *
 def search(pattern, pieces):
     temp = TangramPuzzle(pattern, pieces);
     start_time = timeit.default_timer();
-    astar_search(temp);
+    hillclimbing_search(temp);
     elapsed = timeit.default_timer() - start_time;
     print str(elapsed) + " secondes";
