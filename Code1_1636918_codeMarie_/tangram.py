@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 #
 #  Class Tangram
-# Author: Marie-France Miousse
+# Author: Chali-Anne Lauzon
+#         Marie-France Miousse
 #         École Polytechnique de Montréal
 #
-# This class represents a tangram piece
+# This class represents a tangram piece for an A* tree search
 
 class Tangram(object):
     def __init__(self, piece):
