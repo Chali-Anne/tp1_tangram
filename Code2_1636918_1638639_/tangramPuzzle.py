@@ -92,6 +92,7 @@ class TangramPuzzle(object):
             if id == piece[1]:
                 return -1 * piece[0].nbCells
 
+    # No better way to find the shortest path than by completing the puzzle in one go.
     def heuristic(self):
         return self.nbTotalPieces - self.counter
 
